@@ -1,0 +1,21 @@
+class Solution:
+    def combinationSum3(self, k: int, n: int) -> List[List[int]]:
+        
+        def recur(k, n, arr):
+            s = sum(arr)
+            if k == 0 or s > n:
+                if s == n:
+                    self.ans.append(arr.copy())
+                return
+            
+            max_e = max(arr) if arr else 0
+            for i in range(max_e + 1, min(n + 1, 10)):
+                temp = arr.copy()
+                temp.append(i)
+                recur(k-1, n, temp)
+            return
+        
+        
+        self.ans = []
+        recur(k, n, [])
+        return self.ans
