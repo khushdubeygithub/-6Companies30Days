@@ -1,0 +1,27 @@
+class Solution:
+    # Use rolling hash to compute prefix and suffix hash value in linear time
+    # The pow function would be pain in the butt, so precompute it before doing any work
+    # To the prefix, we proceed normally with Rabin-Karp: (*base + c) % MOD
+    # To the suffix, we c*base^(n-1-i) % MOD
+        
+    def longestPrefix(self, s: str) -> str:
+        # Base chosen: must be larger than maximum of value of s, preferably prime; Mod: large enough to avoid overflow, should be prime
+        self.base, self.MOD = 29, pow(2,31)-1
+        # Generate a lookup table for pow(self.base, 0:len(s)) % self.MOD
+        self.lookup = []
+        seed, n = 1, len(s)
+        for i in range(n):
+            self.lookup.append(seed)
+            seed *= self.base
+            seed %= self.MOD
+        
+        result, prefix, suffix = "", 0, 0
+        for i in range(n-1):
+            prefix *= self.base
+            prefix += ord(s[i])-ord('a')
+            prefix %= self.MOD
+            suffix += (ord(s[n-1-i])-ord('a'))*self.lookup[i]
+            suffix %= self.MOD
+            if prefix == suffix:
+                result = s[:i+1]
+        return result
