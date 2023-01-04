@@ -1,0 +1,6 @@
+    def minOperations(self, A: List[int], numsDivide: List[int]) -> int:
+        g = gcd(*numsDivide)
+        for i,a in enumerate(sorted(A)):
+            if g % a == 0: return i
+            if a > g: break
+        return -1
