@@ -1,0 +1,25 @@
+class Solution:
+    def smallestTrimmedNumbers(self, nums: List[str], queries: List[List[int]]) -> List[int]:
+        n = len(nums)
+        maxstep = len(nums[0])
+
+        lookup = []
+        cur = [i for i in range(n)]
+        for step in range(1, maxstep + 1):
+            counting = [0] * 10
+            for i in cur:
+                digit = int(nums[i][-step])
+                counting[digit] += 1
+            for digit in range(1, 10):
+                counting[digit] += counting[digit - 1]
+			# after doing the accmulative sum, counting[digit] implies the rank of the digit
+            
+            nxt = [0] * n
+            for i in cur[::-1]:
+                digit = int(nums[i][-step])
+                nxt[counting[digit] - 1] = i
+                counting[digit] -= 1
+            cur = nxt
+            lookup.append(cur)
+
+        return [lookup[trim - 1][rank - 1] for rank, trim in queries]    
