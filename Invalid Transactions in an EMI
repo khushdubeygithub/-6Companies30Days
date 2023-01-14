@@ -1,0 +1,18 @@
+def invalidTransactions(self, transactions: List[str]) -> List[str]:
+        res = set()
+        d = defaultdict(set)
+        for j,i in enumerate(transactions):
+            name,time,amt,city = i.split(',')
+            time = int(time)
+            if int(amt)>1000:
+                res.add(j)
+                
+            if name in d:
+                stats = d[name]
+                for idx,ctime,ccity in stats:
+                    if abs(ctime-time)<=60 and city!=ccity:
+                        res.add(idx)
+                        res.add(j)
+            
+            d[name].add((j,time,city))
+        return [transactions[i] for i in res]
