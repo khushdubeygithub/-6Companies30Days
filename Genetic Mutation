@@ -1,0 +1,30 @@
+from operator import add
+from functools import reduce
+from collections import deque
+
+def get_hamming_distance(str1, str2):
+    return reduce(add, (c1 != c2 for c1, c2 in zip(str1, str2)), 0)
+
+class Solution:
+
+    def minMutation(self, start: str, end: str, bank: List[str]) -> int:
+        
+        visited = set()
+        queue = deque()
+        mutations = 0
+        
+        visited.add(start)
+        queue.append(start)
+        
+        while queue:
+            for _ in range(len(queue)): # This line allows per-level processing.
+                gene = queue.popleft()
+                if gene == end:
+                    return mutations
+                for variant in bank:
+                    if variant not in visited and get_hamming_distance(gene, variant) == 1:
+                        visited.add(variant)
+                        queue.append(variant)
+
+            mutations += 1
+        return -1
